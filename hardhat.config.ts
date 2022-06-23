@@ -56,6 +56,9 @@ const config: HardhatUserConfig = {
     },
     voter2: {
       default: 2,
+    },
+    voter3: {
+      default: 3,
     }
   }
 }
