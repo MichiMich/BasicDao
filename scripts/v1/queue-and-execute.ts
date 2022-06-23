@@ -1,4 +1,4 @@
-import { FUNC, PROPOSAL_DESCRIPTION, NEW_STORE_VALUE, developmentChains, MIN_DELAY } from "../helper-hardhat-config";
+import { FUNC, PROPOSAL_DESCRIPTION, NEW_STORE_VALUE, developmentChains, MIN_DELAY, VOTING_PERIOD } from "../helper-hardhat-config";
 import * as fs from "fs";
 // @ts-ignore
 import { ethers, network } from "hardhat";
@@ -6,6 +6,12 @@ import { moveTime } from "../utils/move-time";
 import { moveBlocks } from "../utils/move-blocks";
 
 export async function queueAndExecute() {
+
+    //we want to get to the end of the voting period
+    if (developmentChains.includes(network.name)) {
+        await moveBlocks(VOTING_PERIOD + 1);
+    }
+
     const args = [NEW_STORE_VALUE];
     const box = await ethers.getContract("Box");
     const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, args);
@@ -48,14 +54,7 @@ export async function queueAndExecute() {
 
 }
 
-
-/*
-
-const index = 0; //we get the first element from our proposalsFile (json-file) list
-
-queueAndExecute(index).then(() => process.exit(0)).catch((error) => {
+queueAndExecute().then(() => process.exit(0)).catch((error) => {
     console.log(error)
     process.exit(1);
 }); //this calls the store function of the box contract with the value 77
-
-*/

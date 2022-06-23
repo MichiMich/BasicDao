@@ -20,7 +20,8 @@ export async function propose(args: any[], functionToCall: string, proposalDescr
         functionToCall,
         args
     ); //encodeFunctionData is a ethers function
-    console.log(encodedFunctionCall); //bytes data
+    //console.log(encodedFunctionCall); //bytes data
+
     //now we can interact with it
     console.log(`Proposing ${functionToCall} on ${box.address} with ${args}`);
     console.log(`Proposal Description: \n ${proposalDescription}`);
@@ -35,7 +36,6 @@ export async function propose(args: any[], functionToCall: string, proposalDescr
 
     //normally the wait until the voting delay will pass. Locally nobody is processing blocks, time is not passing as we want here
     //the way we would expect it, so we will make this happen with our function
-    console.log("###network name: " + network.name);
     if (developmentChains.includes(network.name)) {
         await moveBlocks(VOTING_DELAY + 1);
     }

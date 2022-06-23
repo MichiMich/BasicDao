@@ -1593,8 +1593,8 @@
       ]
     },
     "C:\\Projects\\BlockChainDev\\Dao\\Dao\\contracts\\GovernanceToken.sol": {
-      "lastModificationDate": 1655977555289,
-      "contentHash": "addff99803295d784a592de32e083921",
+      "lastModificationDate": 1656010381123,
+      "contentHash": "f6d279818a4c06ecfe917e15bd600e23",
       "sourceName": "contracts/GovernanceToken.sol",
       "solcConfig": {
         "version": "0.8.9",
@@ -1635,82 +1635,6 @@
       "artifacts": [
         "GovernanceToken"
       ]
-    },
-    "C:\\Projects\\BlockChainDev\\Dao\\Dao\\contracts\\Zone.sol": {
-      "lastModificationDate": 1655965316744,
-      "contentHash": "d41d8cd98f00b204e9800998ecf8427e",
-      "sourceName": "contracts/Zone.sol",
-      "solcConfig": {
-        "version": "0.8.9",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [],
-      "artifacts": []
-    },
-    "C:\\Projects\\BlockChainDev\\Dao\\Dao\\contracts\\compound.sol": {
-      "lastModificationDate": 1655978145610,
-      "contentHash": "d41d8cd98f00b204e9800998ecf8427e",
-      "sourceName": "contracts/compound.sol",
-      "solcConfig": {
-        "version": "0.8.9",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [],
-      "artifacts": []
     }
   }
 }

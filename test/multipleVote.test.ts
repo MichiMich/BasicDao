@@ -14,7 +14,6 @@ import { moveBlocks } from "../utils/move-blocks"
 import { moveTime } from "../utils/move-time"
 import { proposalStateToText } from "../helpfulScript"
 
-
 describe("Multiple vote test", async () => {
     let governor: GovernorContract
     let governanceToken: GovernanceToken
