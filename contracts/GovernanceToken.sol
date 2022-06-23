@@ -6,13 +6,17 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 
 contract GovernanceToken is ERC20Votes {
-    uint256 public s_maxSupply = 1000000 * 10**18;
+    uint256 public s_maxSupply = 10 * 10**18;
 
     constructor()
         ERC20("GovernanceToken", "GT")
         ERC20Permit("GovernanceToken")
     {
-        _mint(msg.sender, s_maxSupply); //deployer mints all tokens
+        //_mint(msg.sender, s_maxSupply); //contract mints all tokens, which can be get via getTokensPerVote
+    }
+
+    function mintTokens(uint256 _amount) public {
+        _mint(msg.sender, _amount);
     }
 
     //the functions below are overrides required by solidity

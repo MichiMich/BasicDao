@@ -699,50 +699,6 @@
         "SafeCast"
       ]
     },
-    "C:\\Projects\\BlockChainDev\\Dao\\Dao\\contracts\\GovernanceToken.sol": {
-      "lastModificationDate": 1655747261077,
-      "contentHash": "2a18a236b15488ff22fd1e2a20a7c431",
-      "sourceName": "contracts/GovernanceToken.sol",
-      "solcConfig": {
-        "version": "0.8.9",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "GovernanceToken"
-      ]
-    },
     "C:\\Projects\\BlockChainDev\\Dao\\Dao\\node_modules\\@openzeppelin\\contracts\\utils\\structs\\DoubleEndedQueue.sol": {
       "lastModificationDate": 1655753377529,
       "contentHash": "1252685551a5afdb6005499e0f549eff",
@@ -1411,8 +1367,8 @@
       ]
     },
     "C:\\Projects\\BlockChainDev\\Dao\\Dao\\contracts\\governance_standard\\GovernorContract.sol": {
-      "lastModificationDate": 1655802049607,
-      "contentHash": "5bf16909d4dc973b010dab47e6bb6c49",
+      "lastModificationDate": 1655925454742,
+      "contentHash": "dde2908178c2d9e59876e79750ad470e",
       "sourceName": "contracts/governance_standard/GovernorContract.sol",
       "solcConfig": {
         "version": "0.8.9",
@@ -1635,6 +1591,126 @@
       "artifacts": [
         "GovernorVotesQuorumFraction"
       ]
+    },
+    "C:\\Projects\\BlockChainDev\\Dao\\Dao\\contracts\\GovernanceToken.sol": {
+      "lastModificationDate": 1655977555289,
+      "contentHash": "addff99803295d784a592de32e083921",
+      "sourceName": "contracts/GovernanceToken.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "GovernanceToken"
+      ]
+    },
+    "C:\\Projects\\BlockChainDev\\Dao\\Dao\\contracts\\Zone.sol": {
+      "lastModificationDate": 1655965316744,
+      "contentHash": "d41d8cd98f00b204e9800998ecf8427e",
+      "sourceName": "contracts/Zone.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [],
+      "artifacts": []
+    },
+    "C:\\Projects\\BlockChainDev\\Dao\\Dao\\contracts\\compound.sol": {
+      "lastModificationDate": 1655978145610,
+      "contentHash": "d41d8cd98f00b204e9800998ecf8427e",
+      "sourceName": "contracts/compound.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [],
+      "artifacts": []
     }
   }
 }

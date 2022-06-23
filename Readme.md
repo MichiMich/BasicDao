@@ -9,8 +9,6 @@ I created this dao by coding along at [How to build an on-chain DAO](https://www
 
 # About
 
-## 
-
 ## GovernorContract
 The GovernorContract is configured by the [openzeppeling wizzard](https://docs.openzeppelin.com/contracts/4.x/wizard)
 and adapted to handover the voting delay and voting period with the constructor.

@@ -16,6 +16,8 @@ const deployBox: DeployFunction = async function (hre: HardhatRuntimeEnvironment
         log: true,
         //todo add confirmation bit
     })
+
+
     //deployer is owner of box
     const timeLock = await ethers.getContract("TimeLock");
     const boxContract = await ethers.getContractAt("Box", box.address);

@@ -29,7 +29,7 @@ contract GovernorContract is
             _votingPeriod, /*45818 is approx. 1 week */
             0
         )
-        GovernorVotes(_token)
+        GovernorVotes(_token) //tell me the weight from the token by calling _getVotes at given blockNumber (built in snapshot mechanism)
         GovernorVotesQuorumFraction(_quorumPercentage)
         GovernorTimelockControl(_timelock)
     {}

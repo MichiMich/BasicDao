@@ -3,6 +3,7 @@ import * as fs from "fs";
 // @ts-ignore
 import { ethers, network } from "hardhat";
 import { moveBlocks } from "../utils/move-blocks";
+import { proposalStateToText } from "../helpfulScript";
 
 export async function vote(proposalIndex: number) {
     const proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
@@ -28,8 +29,8 @@ export async function vote(proposalIndex: number) {
     //check the status
     const proposalState = await governor.state(propsalId);
 
-    const proposalStates = ["Pending", "Active", "Canceled", "Defeated", "Succeeded", "Queued", "Expired", "Executed"];
-    console.log("\n\nProposal state: " + proposalStates[proposalState]);
+
+    console.log("\n\nProposal state: " + proposalStateToText(proposalState));
     /* from contract:
       enum ProposalState {
         Pending,

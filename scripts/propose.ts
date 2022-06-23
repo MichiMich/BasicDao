@@ -3,6 +3,7 @@ import { ethers, network } from "hardhat";
 import { NEW_STORE_VALUE, FUNC, PROPOSAL_DESCRIPTION, developmentChains, VOTING_DELAY, proposalsFile } from "../helper-hardhat-config";
 import { moveBlocks } from "../utils/move-blocks";
 import * as fs from "fs";
+import { proposalStateToText } from "../helpfulScript";
 
 export async function propose(args: any[], functionToCall: string, proposalDescription: string) {
     //we want to call the propose function of the governor contract:
@@ -55,10 +56,13 @@ export async function propose(args: any[], functionToCall: string, proposalDescr
     const proposalId = proposeReceipt.events[0].args.proposalId; //this is what our other scripts (voet,queue) need to know to interact with it
     console.log(`Proposed with proposal ID:\n  ${proposalId}`)
 
+
+
     const proposalState = await governor.state(proposalId);
     const proposalSnapshot = await governor.proposalSnapshot(proposalId);
     const proposalDeadline = await governor.proposalDeadline(proposalId);
-    console.log(`Proposal State: \n ${proposalState} \n Proposal Snapshot: \n ${proposalSnapshot} \n Proposal Deadline: \n ${proposalDeadline}`);
+
+    console.log(`Proposal State: \n ${proposalStateToText(proposalState)} \n Proposal Snapshot: \n ${proposalSnapshot} \n Proposal Deadline: \n ${proposalDeadline}`);
 
     let proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
     proposals[network.config.chainId!.toString()].push(proposalId.toString());

@@ -12,3 +12,7 @@ proposals.json
 typechain-types
 gas-report.txt
 deployments
+
+#other contract
+Gridzone.sol
+compound.sol

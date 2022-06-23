@@ -9,7 +9,7 @@ async function proposeVoteQueueAndExecute() {
     //vote on last set proposal, index 0 = last proposal at proposal.json file
     await vote(0);
     //queueAndExecute on last set proposal, index 0 = last proposal at proposal.json file
-    await queueAndExecute(0);
+    await queueAndExecute();
 
 }
 

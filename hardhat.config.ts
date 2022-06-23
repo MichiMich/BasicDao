@@ -1,12 +1,10 @@
 
-import "@nomiclabs/hardhat-ethers"
-import "@typechain/hardhat"
-import "hardhat-deploy"
 import "@typechain/hardhat"
 import "@nomiclabs/hardhat-etherscan"
 import "@nomiclabs/hardhat-ethers"
 import "dotenv/config"
 import "hardhat-deploy"
+import "@nomiclabs/hardhat-waffle"
 import { HardhatUserConfig } from "hardhat/config";
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -52,6 +50,12 @@ const config: HardhatUserConfig = {
   namedAccounts: {
     deployer: {
       default: 0,
+    },
+    voter1: {
+      default: 1,
+    },
+    voter2: {
+      default: 2,
     }
   }
 }

@@ -5,7 +5,7 @@ import { ethers, network } from "hardhat";
 import { moveTime } from "../utils/move-time";
 import { moveBlocks } from "../utils/move-blocks";
 
-export async function queueAndExecute(proposalIndex: number) {
+export async function queueAndExecute() {
     const args = [NEW_STORE_VALUE];
     const box = await ethers.getContract("Box");
     const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, args);
@@ -24,15 +24,24 @@ export async function queueAndExecute(proposalIndex: number) {
         await moveBlocks(1);
     }
 
+    /*we could fetch proposalState and if not succeeded and not queued we could throw error 
+    and returning, but it would only to avoid the vm exception, its not bad either
+    if the vm exception with the revert string is fired
+    const proposalState = await governor.state(proposalId);
+    if
+    */
+
     console.log("Executing...");
     const executeTx = await governor.execute(
-        [box.address],
-        [0],
-        [encodedFunctionCall],
+        [box.address], //target/contract, at which the encodedFunctionCall will be called
+        [0], //value 
+        [encodedFunctionCall], //function which will be called by timelockController
         descriptionHash);
 
     await executeTx.wait(1);
 
+    //now we have executed our function call by the timelockController (the retrieve function shows the new
+    //value of the box contract if the vote has passed, otherwise it shows the previous value)
     const boxNewValue = await box.retrieve();
     console.log(`Box new value: ${boxNewValue.toString()}`);
 
