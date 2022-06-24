@@ -1,8 +1,8 @@
-import { proposalsFile, NEW_STORE_VALUE, developmentChains, VOTING_PERIOD } from "../helper-hardhat-config";
+import { proposalsFile, NEW_STORE_VALUE, developmentChains, VOTING_PERIOD } from "../../helper-hardhat-config";
 import * as fs from "fs";
 // @ts-ignore
 import { ethers, network } from "hardhat";
-import { proposalStateToText } from "../helpfulScript";
+import { proposalStateToText } from "../../helpfulScript";
 
 export async function voteSpecific(proposalIndex: number, voteWay: number, reason: string, signer: any) {
     const proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));

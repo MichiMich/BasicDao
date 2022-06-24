@@ -1,20 +1,19 @@
 
 // @ts-ignore
 import { ethers, network } from "hardhat";
-import { developmentChains, VOTING_DELAY, proposalsFile, VOTING_PERIOD, NEW_STORE_VALUE, MIN_DELAY, FUNC, PROPOSAL_DESCRIPTION } from "../helper-hardhat-config";
+import { developmentChains, VOTING_DELAY, proposalsFile, NEW_STORE_VALUE, MIN_DELAY, FUNC, PROPOSAL_DESCRIPTION } from "../helper-hardhat-config";
 import { moveBlocks } from "../utils/move-blocks";
 import { moveTime } from "../utils/move-time";
 import * as fs from "fs";
 import { proposalStateToText } from "../helpfulScript";
 
 
-export async function mintAndDelegate(signer: any, amount: number, delegateeAddress: any) {
-    // @ts-ignore
-    const governanceToken = await hre.ethers.getContract("GovernanceToken");
+export async function mintAndDelegate(contract: any, signer: any, delegateeAddress: any) {
 
-    await governanceToken.connect(signer).mintTokens(amount);
+    await contract.connect(signer).mintTokens();
     //lets call delegate->create a checkpoint which results in voting power by delegating them (in this case we self delegate)
-    await governanceToken.connect(signer).delegate(delegateeAddress);
+    await contract.connect(signer).delegate(delegateeAddress);
+
 
 }
 
@@ -79,6 +78,9 @@ export async function propose(args: any[], functionToCall: string, proposalDescr
     let proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
     proposals[network.config.chainId!.toString()].push(proposalId.toString());
     fs.writeFileSync(proposalsFile, JSON.stringify(proposals));
+
+    return (proposalId);
+
 }
 
 
@@ -101,13 +103,6 @@ export async function voteSpecific(proposalIndex: number, voteWay: number, reaso
 
 export async function queue() {
 
-
-
-    //we want to get to the end of the voting period
-    if (developmentChains.includes(network.name)) {
-        await moveBlocks(VOTING_PERIOD + 1);
-    }
-
     const args = [NEW_STORE_VALUE];
     const box = await ethers.getContract("Box");
     const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, args);
@@ -121,12 +116,12 @@ export async function queue() {
     const proposalId = proposals[network.config.chainId!][0];
     const proposalState = await governor.state(proposalId);
 
-    if (!proposalStateToText(proposalState).includes("Succeeded")) {
-        console.log("\n\nProposal state: " + proposalStateToText(proposalState) + " no queing possible/needed");
-        return;
+    if (proposalStateToText(proposalState).includes("Succeeded")) {
+        console.log("\n\nProposal state: " + proposalStateToText(proposalState) + " go on with queing it");
     }
     else {
-        console.log("\n\nProposal state: " + proposalStateToText(proposalState) + " go on with queing it");
+        console.log("\n\nProposal state: " + proposalStateToText(proposalState) + " no queing possible/needed");
+        return;
     }
 
 
@@ -141,21 +136,10 @@ export async function queue() {
         await moveBlocks(1);
     }
 
-    /*we could fetch proposalState and if not succeeded and not queued we could throw error 
-    and returning, but it would only to avoid the vm exception, its not bad either
-    if the vm exception with the revert string is fired
-    const proposalState = await governor.state(proposalId);
-    if
-    */
-
-
 }
 
 
 export async function execute() {
-
-
-
 
     const proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
     const proposalId = proposals[network.config.chainId!][0];

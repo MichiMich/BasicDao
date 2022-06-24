@@ -9,9 +9,9 @@ export async function proposeVote() {
     // @ts-ignore
     const governanceToken = await hre.ethers.getContract("GovernanceToken");
 
-    await governanceToken.connect(voter1).mintTokens(1);
-    await governanceToken.connect(voter2).mintTokens(1);
-    await governanceToken.connect(voter3).mintTokens(1);
+    await governanceToken.connect(voter1).mintTokens();
+    await governanceToken.connect(voter2).mintTokens();
+    await governanceToken.connect(voter3).mintTokens();
     //lets call delegate->create a checkpoint which results in voting power by delegating them (in this case we self delegate)
     await governanceToken.connect(voter1).delegate(voter1.address);
     await governanceToken.connect(voter2).delegate(voter2.address);
