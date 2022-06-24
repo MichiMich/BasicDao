@@ -5,18 +5,18 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 
-contract GovernanceToken is ERC20Votes {
+contract GovernanceTokenERC20 is ERC20Votes {
     uint256 public s_maxSupply = 10000;
 
     constructor()
-        ERC20("GovernanceToken", "GT")
-        ERC20Permit("GovernanceToken")
+        ERC20("GovernanceTokenERC20", "GT")
+        ERC20Permit("GovernanceTokenERC20")
     {
         //_mint(msg.sender, s_maxSupply); //contract mints all tokens, which can be get via getTokensPerVote
     }
 
     //reduce tokens to 1 per wallet
-    function mintTokens() public {
+    function mint() public {
         //reantrancy?
         require(balanceOf(msg.sender) == 0, "One mint per wallet allowed");
         _mint(msg.sender, 1);

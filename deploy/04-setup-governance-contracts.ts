@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { ADDRESS_ZERO } from "../helper-hardhat-config";
+import { ADDRESS_ZERO, governorContractName } from "../helper-hardhat-config";
 // @ts-ignore
 import { ethers } from "hardhat";
 
@@ -10,7 +10,7 @@ const setupContracts: DeployFunction = async function (hre: HardhatRuntimeEnviro
     const { deploy, log, get } = deployments;
     const { deployer } = await getNamedAccounts();
     const timeLock = await ethers.getContract("TimeLock", deployer); //now every function called on it will be called by the deployer
-    const governor = await ethers.getContract("GovernorContract", deployer);
+    const governor = await ethers.getContract(governorContractName, deployer);
 
     log("Setting up roles...");
     //calling public constants from contract

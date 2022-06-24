@@ -1,21 +1,22 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
+import { governanceTokenContractName } from "../helper-hardhat-config";
 
-const deployGovernanceToken: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+const deployGovernanceContract: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     // @ts-ignore
     const { getNamedAccounts, deployments } = hre;
     const { deploy, log } = deployments;
     const { deployer } = await getNamedAccounts();
 
-    log("Deploying Governance Token...");
-    const governanceToken = await deploy("GovernanceToken", {
+    log("Deploying: ", governanceTokenContractName, "...");
+    const governanceContract = await deploy(governanceTokenContractName, {
         from: deployer,
         args: [],
         log: true,
         //waitConfirmations: //this stuff used for verfiyng the transaction
     });
 
-    log(`deployed GovernanceToken to address ${governanceToken.address}`);
+    log(`deployed ${governanceTokenContractName} to address ${governanceContract.address}`);
 
 };
 
@@ -28,4 +29,4 @@ const delegate = async (governanceTokenAddress: string, delegatedAccount: string
     console.log(`checkpoints ${await governanceToken.numCheckpoints(delegatedAccount)}`);
 }*/
 
-export default deployGovernanceToken;
+export default deployGovernanceContract;

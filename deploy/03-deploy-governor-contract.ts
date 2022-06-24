@@ -1,19 +1,22 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { VOTING_PERIOD, VOTING_DELAY, QUORUM_PERCANTAGE } from "../helper-hardhat-config";
+import { VOTING_PERIOD, VOTING_DELAY, QUORUM_PERCANTAGE, governorContractName, governanceTokenContractName } from "../helper-hardhat-config";
+
 
 const deployGovernorContract: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     // @ts-ignore
     const { getNamedAccounts, deployments } = hre;
     const { deploy, log, get } = deployments;
     const { deployer } = await getNamedAccounts();
-    log("Deploying governorContract...");
+    log("Deploying governorContract:", governorContractName, "...");
     //get tokens deployed by other deployment scripts
-    const governanceToken = await get("GovernanceToken");
+    const governanceToken = await get(governanceTokenContractName);
+
+
     const timeLock = await get("TimeLock");
 
-    log("deploying governor")
-    const governorContract = await deploy("GovernorContract", {
+    log("deploying governor ", governorContractName)
+    const governorContract = await deploy(governorContractName, {
 
         from: deployer,
         args: [

@@ -10,22 +10,20 @@ import { proposalStateToText } from "../helpfulScript";
 
 export async function mintAndDelegate(contract: any, signer: any, delegateeAddress: any) {
 
-    await contract.connect(signer).mintTokens();
+    await contract.connect(signer).mint();
     //lets call delegate->create a checkpoint which results in voting power by delegating them (in this case we self delegate)
     await contract.connect(signer).delegate(delegateeAddress);
 
-
 }
 
-
-export async function propose(args: any[], functionToCall: string, proposalDescription: string) {
+export async function propose(governorContractName: string, args: any[], functionToCall: string, proposalDescription: string) {
     //we want to call the propose function of the governor contract:
     //list of targets we want to call functions on
     //calldata=encoded parameters for function and
     //description
     console.log("!!!!!\n\n" + args + functionToCall + proposalDescription);
 
-    const governor = await ethers.getContract("GovernorContract");
+    const governor = await ethers.getContract(governorContractName);
     const box = await ethers.getContract("Box");
 
     //encode function data to bytes
@@ -84,12 +82,12 @@ export async function propose(args: any[], functionToCall: string, proposalDescr
 }
 
 
-export async function voteSpecific(proposalIndex: number, voteWay: number, reason: string, signer: any) {
+export async function voteSpecific(governorContractName: string, proposalIndex: number, voteWay: number, reason: string, signer: any) {
     const proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
     const propsalId = proposals[network.config.chainId!][proposalIndex];
     console.log("read proposalId from file: ", propsalId);
     //choose how we are going to vote
-    const governor = await ethers.getContract("GovernorContract");
+    const governor = await ethers.getContract(governorContractName);
     const voteTxResponse = await governor.connect(signer).castVoteWithReason(
         propsalId, voteWay, reason
     );
@@ -101,7 +99,7 @@ export async function voteSpecific(proposalIndex: number, voteWay: number, reaso
     console.log("\n\nProposal state: " + proposalStateToText(proposalState));
 }
 
-export async function queue() {
+export async function queue(governorContractName: string) {
 
     const args = [NEW_STORE_VALUE];
     const box = await ethers.getContract("Box");
@@ -109,7 +107,7 @@ export async function queue() {
     //the queue function just looks for the hash of the proposal description
     const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION));
 
-    const governor = await ethers.getContract("GovernorContract");
+    const governor = await ethers.getContract(governorContractName);
 
 
     const proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
@@ -139,7 +137,7 @@ export async function queue() {
 }
 
 
-export async function execute() {
+export async function execute(governorContractName: string) {
 
     const proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
     const proposalId = proposals[network.config.chainId!][0];
@@ -147,7 +145,7 @@ export async function execute() {
     //the queue function just looks for the hash of the proposal description
     const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION));
 
-    const governor = await ethers.getContract("GovernorContract");
+    const governor = await ethers.getContract(governorContractName);
 
     const args = [NEW_STORE_VALUE];
     const box = await ethers.getContract("Box");

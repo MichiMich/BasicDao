@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/governance/Governor.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
 
-contract GovernorERC20 is
+contract GovernorERC721 is
     Governor,
     GovernorSettings,
     GovernorCountingSimple,
@@ -23,14 +23,14 @@ contract GovernorERC20 is
         uint256 _votingPeriod,
         uint256 _quorumPercentage
     )
-        Governor("GovernorERC20")
+        Governor("GovernorERC721")
         GovernorSettings(
-            _votingDelay, /* in blocks */
+            _votingDelay, /* blocks */
             _votingPeriod, /*45818 is approx. 1 week */
             0
         )
-        GovernorVotes(_token) //tell me the weight from the token by calling _getVotes at given blockNumber (built in snapshot mechanism)
-        GovernorVotesQuorumFraction(_quorumPercentage)
+        GovernorVotes(_token)
+        GovernorVotesQuorumFraction(4)
         GovernorTimelockControl(_timelock)
     {}
 

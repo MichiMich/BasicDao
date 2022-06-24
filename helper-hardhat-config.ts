@@ -8,3 +8,5 @@ export const FUNC = "store";
 export const PROPOSAL_DESCRIPTION = "Proposal #1: Store 77 in the Box!";
 export const developmentChains = ["hardhat", "localhost"];
 export const proposalsFile = "proposals.json";
+export const governorContractName = "GovernorERC721";//"GovernorERC20";"GovernorERC721";
+export const governanceTokenContractName = "GovernanceTokenERC721";//"GovernanceTokenERC20"; //"GovernanceTokenERC721";
