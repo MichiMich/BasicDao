@@ -1,31 +1,46 @@
 
-import { GovernorContract, GovernanceToken, TimeLock, Box } from "../typechain-types"
+import { GovernorERC20, GovernanceTokenERC20, TimeLock, Box, GovernanceTokenERC721, GovernorERC721 } from "../typechain-types"
 // @ts-ignore
 import { deployments, ethers } from "hardhat"
 import { assert, expect } from "chai"
 import {
     FUNC,
     PROPOSAL_DESCRIPTION,
-    NEW_STORE_VALUE,
+    argsForFuncExecution,
     VOTING_DELAY,
     VOTING_PERIOD,
     MIN_DELAY,
+    governorContractName,
+    governanceTokenContractName
 } from "../helper-hardhat-config"
 import { moveBlocks } from "../utils/move-blocks"
 import { moveTime } from "../utils/move-time"
 
 describe("Governor Flow", async () => {
-    let governor: GovernorContract
-    let governanceToken: GovernanceToken
+    let governor: any;
+    let governanceToken: any;
+    // if (governorContractName == "GovernorERC721") {
+    //     governor: GovernorERC721;
+    //     let governanceToken: GovernanceTokenERC721;
+    // }
+    // else if (governorContractName == "GovernorERC20") {
+    //     governor: GovernorERC20
+    //     governanceToken: GovernanceTokenERC20
+    // }
+    // else {
+    //     console.log("Undefined/Unconfigured governorContractName at helper-hardhat-config.ts")
+    //     return;
+    // }
+
     let timeLock: TimeLock
     let box: Box
     const voteWay = 1 // for
     const reason = "I lika do da cha cha"
     beforeEach(async () => {
         //await deployments.fixture(["all"])
-        governor = await ethers.getContract("GovernorContract")
+        governor = await ethers.getContract(governorContractName)
         timeLock = await ethers.getContract("TimeLock")
-        governanceToken = await ethers.getContract("GovernanceToken")
+        governanceToken = await ethers.getContract(governanceTokenContractName)
         box = await ethers.getContract("Box")
     })
 
@@ -35,7 +50,7 @@ describe("Governor Flow", async () => {
 
     it("proposes, votes, waits, queues, and then executes", async () => {
         // propose
-        const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, [NEW_STORE_VALUE])
+        const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, [argsForFuncExecution])
         const proposeTx = await governor.propose(
             [box.address],
             [0],

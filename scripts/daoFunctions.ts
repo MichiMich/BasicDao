@@ -1,7 +1,7 @@
 
 // @ts-ignore
 import { ethers, network } from "hardhat";
-import { developmentChains, VOTING_DELAY, proposalsFile, NEW_STORE_VALUE, MIN_DELAY, FUNC, PROPOSAL_DESCRIPTION } from "../helper-hardhat-config";
+import { developmentChains, VOTING_DELAY, proposalsFile, argsForFuncExecution, MIN_DELAY, contractNameWhereActionTakesPlace, FUNC, PROPOSAL_DESCRIPTION } from "../helper-hardhat-config";
 import { moveBlocks } from "../utils/move-blocks";
 import { moveTime } from "../utils/move-time";
 import * as fs from "fs";
@@ -9,11 +9,9 @@ import { proposalStateToText } from "../helpfulScript";
 
 
 export async function mintAndDelegate(contract: any, signer: any, delegateeAddress: any) {
-
     await contract.connect(signer).mint();
     //lets call delegate->create a checkpoint which results in voting power by delegating them (in this case we self delegate)
     await contract.connect(signer).delegate(delegateeAddress);
-
 }
 
 export async function propose(governorContractName: string, args: any[], functionToCall: string, proposalDescription: string) {
@@ -24,20 +22,20 @@ export async function propose(governorContractName: string, args: any[], functio
     console.log("!!!!!\n\n" + args + functionToCall + proposalDescription);
 
     const governor = await ethers.getContract(governorContractName);
-    const box = await ethers.getContract("Box");
+    const executingContract = await ethers.getContract(contractNameWhereActionTakesPlace);
 
     //encode function data to bytes
-    const encodedFunctionCall = box.interface.encodeFunctionData(
+    const encodedFunctionCall = executingContract.interface.encodeFunctionData(
         functionToCall,
         args
     ); //encodeFunctionData is a ethers function
     //console.log(encodedFunctionCall); //bytes data
 
     //now we can interact with it
-    console.log(`Proposing ${functionToCall} on ${box.address} with ${args}`);
+    console.log(`Proposing ${functionToCall} on ${executingContract.address} with ${args}`);
     console.log(`Proposal Description: \n ${proposalDescription}`);
     const proposeTx = await governor.propose(
-        [box.address], //list of targets
+        [executingContract.address], //list of targets
         [0], //values
         [encodedFunctionCall], //list of encoded function calls in bytes
         proposalDescription
@@ -101,9 +99,9 @@ export async function voteSpecific(governorContractName: string, proposalIndex: 
 
 export async function queue(governorContractName: string) {
 
-    const args = [NEW_STORE_VALUE];
-    const box = await ethers.getContract("Box");
-    const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, args);
+    const args = argsForFuncExecution;
+    const executingContract = await ethers.getContract(contractNameWhereActionTakesPlace);
+    const encodedFunctionCall = executingContract.interface.encodeFunctionData(FUNC, args);
     //the queue function just looks for the hash of the proposal description
     const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION));
 
@@ -124,7 +122,7 @@ export async function queue(governorContractName: string) {
 
 
     console.log("Queueing...");
-    const queueTx = await governor.queue([box.address], [0], [encodedFunctionCall], descriptionHash)
+    const queueTx = await governor.queue([executingContract.address], [0], [encodedFunctionCall], descriptionHash)
     await queueTx.wait(1);
 
     console.log("whe have queued it, now we need to move blocks and time")
@@ -147,9 +145,9 @@ export async function execute(governorContractName: string) {
 
     const governor = await ethers.getContract(governorContractName);
 
-    const args = [NEW_STORE_VALUE];
-    const box = await ethers.getContract("Box");
-    const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, args);
+    const args = argsForFuncExecution;
+    const executingContract = await ethers.getContract(contractNameWhereActionTakesPlace);
+    const encodedFunctionCall = executingContract.interface.encodeFunctionData(FUNC, args);
 
     const proposalState = await governor.state(proposalId);
     console.log("ProposalState at execute: " + proposalState);
@@ -162,16 +160,18 @@ export async function execute(governorContractName: string) {
 
     console.log("Executing...");
     const executeTx = await governor.execute(
-        [box.address], //target/contract, at which the encodedFunctionCall will be called
+        [executingContract.address], //target/contract, at which the encodedFunctionCall will be called
         [0], //value 
         [encodedFunctionCall], //function which will be called by timelockController
         descriptionHash);
 
     await executeTx.wait(1);
 
+    /*
     //now we have executed our function call by the timelockController (the retrieve function shows the new
     //value of the box contract if the vote has passed, otherwise it shows the previous value)
-    const boxNewValue = await box.retrieve();
+    const boxNewValue = await executingContract.retrieve();
     console.log(`Box new value: ${boxNewValue.toString()}`);
+    */
 
 }

@@ -1,6 +1,6 @@
 
 import { mintAndDelegate, propose, voteSpecific, queue, execute } from "./daoFunctions";
-import { NEW_STORE_VALUE, FUNC, PROPOSAL_DESCRIPTION, developmentChains, VOTING_DELAY, VOTING_PERIOD, proposalsFile, governanceTokenContractName, governorContractName } from "../helper-hardhat-config";
+import { argsForFuncExecution, FUNC, PROPOSAL_DESCRIPTION, developmentChains, VOTING_DELAY, VOTING_PERIOD, proposalsFile, governanceTokenContractName, governorContractName } from "../helper-hardhat-config";
 // @ts-ignore
 import { ethers, network } from "hardhat"
 import { proposalStateToText } from "../helpfulScript";
@@ -23,7 +23,7 @@ export async function runVoteCycleNft() {
     console.log("Votes for voter3: ", await governanceToken.getVotes(voter3.address));
 
     //propose
-    const proposalId = await propose(governorContractName, [NEW_STORE_VALUE], FUNC, PROPOSAL_DESCRIPTION);
+    const proposalId = await propose(governorContractName, argsForFuncExecution, FUNC, PROPOSAL_DESCRIPTION);
 
 
     await voteSpecific(governorContractName, 0, 1, "I am for it", voter1);
@@ -56,7 +56,7 @@ export async function runVoteCycleNft() {
 
 }
 
-runVoteCycleNft().then(() => process.exit(0)).catch((error) => {
-    console.log(error)
-    process.exit(1);
-}); //this calls the store function of the box contract with the value 77
+// runVoteCycleNft().then(() => process.exit(0)).catch((error) => {
+//     console.log(error)
+//     process.exit(1);
+// }); //this calls the store function of the box contract with the value 77

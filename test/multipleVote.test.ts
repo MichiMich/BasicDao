@@ -1,43 +1,42 @@
-import { GovernorContract, GovernanceToken, TimeLock, Box } from "../typechain-types"
+import { TimeLock, Box } from "../typechain-types"
 
 // @ts-ignore
 import { ethers, network } from "hardhat"
 import { assert, expect } from "chai"
 import { mintAndDelegate, propose, voteSpecific, queue, execute } from "../scripts/daoFunctions";
-import { NEW_STORE_VALUE, FUNC, PROPOSAL_DESCRIPTION, developmentChains, VOTING_DELAY, VOTING_PERIOD, proposalsFile, MIN_DELAY } from "../helper-hardhat-config";
+import { contractNameWhereActionTakesPlace, argsForFuncExecution, FUNC, PROPOSAL_DESCRIPTION, developmentChains, VOTING_DELAY, VOTING_PERIOD, proposalsFile, MIN_DELAY } from "../helper-hardhat-config";
 
 import { moveBlocks } from "../utils/move-blocks"
 import { moveTime } from "../utils/move-time"
 import { proposalStateToText } from "../helpfulScript"
 
-import { runVoteCycle } from "../scripts/runVoteCycle"
-
+import { runVoteCycleNft } from "../scripts/runVoteCycle"
+import {
+    governorContractName,
+    governanceTokenContractName
+} from "../helper-hardhat-config"
 /* 
 pretty basic test for one vote cycle, needs to be extended with more votes against,
 queuing and executing if failed, check if function is executed on contract after succeeded
 */
 
 describe("Multiple vote test", async () => {
-    let governor: GovernorContract
-    let governanceToken: GovernanceToken
+    let governor: any;
+    let governanceToken: any;
     let timeLock: TimeLock
     let box: Box
 
     beforeEach(async () => {
         //await deployments.fixture(["all"])
-        governor = await ethers.getContract("GovernorContract")
+        governor = await ethers.getContract(governorContractName)
         timeLock = await ethers.getContract("TimeLock")
-        governanceToken = await ethers.getContract("GovernanceToken")
+        governanceToken = await ethers.getContract(governanceTokenContractName)
         box = await ethers.getContract("Box")
     })
 
-
-
-
-
     it("mint tokens,propose,vote,queue and execute", async () => {
 
-        await runVoteCycle();
+        await runVoteCycleNft();
 
     });
 
@@ -51,17 +50,17 @@ describe("Multiple vote test", async () => {
         //ToDo: add contract here from which should be minted
         //mint tokens, delegate minted tokens, so they have voting power
         // @ts-ignore
-        const governanceToken = await hre.ethers.getContract("GovernanceToken");
+        const governanceToken = await hre.ethers.getContract(governanceTokenContractName);
         await mintAndDelegate(governanceToken, voter1, voter1.address); //signer, amount, delegate
         await mintAndDelegate(governanceToken, voter2, voter2.address); //signer, amount, delegate
         await mintAndDelegate(governanceToken, voter3, voter3.address); //signer, amount, delegate
 
         //propose
-        let proposalId = await propose([NEW_STORE_VALUE], FUNC, PROPOSAL_DESCRIPTION);
+        let proposalId = await propose(governorContractName, argsForFuncExecution, FUNC, PROPOSAL_DESCRIPTION);
 
-        await voteSpecific(0, 1, "I am for it", voter1);
-        await voteSpecific(0, 0, "I am against it", voter2);
-        await voteSpecific(0, 1, "No", voter3);
+        await voteSpecific(governorContractName, 0, 1, "I am for it", voter1);
+        await voteSpecific(governorContractName, 0, 0, "I am against it", voter2);
+        await voteSpecific(governorContractName, 0, 0, "No", voter3);
 
         //pass voting period
         //we want to get to the end of the voting period
@@ -71,7 +70,7 @@ describe("Multiple vote test", async () => {
 
         const proposalState = await governor.state(proposalId);
 
-        const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, [NEW_STORE_VALUE]);
+        const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, [argsForFuncExecution]);
         //the queue function just looks for the hash of the proposal description
         const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION));
 
@@ -91,7 +90,7 @@ describe("Multiple vote test", async () => {
             }
 
 
-            await execute();
+            await execute(governorContractName);
 
         }
         else {
