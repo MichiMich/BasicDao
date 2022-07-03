@@ -1,4 +1,4 @@
-import { TimeLock, Box } from "../typechain-types"
+import { TimeLock } from "../typechain-types"
 
 // @ts-ignore
 import { ethers, network } from "hardhat"
@@ -24,14 +24,14 @@ describe("Multiple vote test", async () => {
     let governor: any;
     let governanceToken: any;
     let timeLock: TimeLock
-    let box: Box
+    let executingContract: any;
 
     beforeEach(async () => {
         //await deployments.fixture(["all"])
         governor = await ethers.getContract(governorContractName)
         timeLock = await ethers.getContract("TimeLock")
         governanceToken = await ethers.getContract(governanceTokenContractName)
-        box = await ethers.getContract("Box")
+        executingContract = await ethers.getContract(contractNameWhereActionTakesPlace)
     })
 
     it("mint tokens,propose,vote,queue and execute", async () => {
@@ -42,7 +42,7 @@ describe("Multiple vote test", async () => {
 
     /*this is basically in the runVoteCycle included, some could check if the
     vote does not pass and check for vm revertion*/
-    it("mint tokens,propose, fail vote", async () => {
+    it("mint tokens,propose, succeed vote, queue and execute", async () => {
 
         // @ts-ignore
         const { voter1, voter2, voter3 } = await hre.ethers.getNamedSigners();
@@ -60,7 +60,7 @@ describe("Multiple vote test", async () => {
 
         await voteSpecific(governorContractName, 0, 1, "I am for it", voter1);
         await voteSpecific(governorContractName, 0, 0, "I am against it", voter2);
-        await voteSpecific(governorContractName, 0, 0, "No", voter3);
+        await voteSpecific(governorContractName, 0, 1, "No", voter3);
 
         //pass voting period
         //we want to get to the end of the voting period
@@ -70,7 +70,8 @@ describe("Multiple vote test", async () => {
 
         const proposalState = await governor.state(proposalId);
 
-        const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, [argsForFuncExecution]);
+        const encodedFunctionCall = executingContract.interface.encodeFunctionData(FUNC, argsForFuncExecution);
+
         //the queue function just looks for the hash of the proposal description
         const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION));
 
@@ -79,7 +80,7 @@ describe("Multiple vote test", async () => {
 
 
             console.log("Queueing...");
-            const queueTx = await governor.queue([box.address], [0], [encodedFunctionCall], descriptionHash)
+            const queueTx = await governor.queue([executingContract.address], [0], [encodedFunctionCall], descriptionHash)
             await queueTx.wait(1);
 
             console.log("whe have queued it, now we need to move blocks and time")
@@ -95,9 +96,13 @@ describe("Multiple vote test", async () => {
         }
         else {
             console.log("\n\nProposal state: " + proposalStateToText(proposalState) + " no queing possible/needed");
-            await expect(governor.queue([box.address], [0], [encodedFunctionCall], descriptionHash)).to.be.reverted;
+            await expect(governor.queue([executingContract.address], [0], [encodedFunctionCall], descriptionHash)).to.be.reverted;
             return;
         }
+
+        //ToDo this needs to be adapted, on what to call depending on helper-hardhat-config contract and func
+        //box store, we call retrieve, nft collection, we call isPartOfCollection
+        console.log("Is  part of collection: ", await executingContract.isPartOfCollection("0xaf6344bc7bc538dcf7179c36fc57ccae302c1bbb"))
 
     });
 

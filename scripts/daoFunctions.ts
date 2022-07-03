@@ -19,7 +19,7 @@ export async function propose(governorContractName: string, args: any[], functio
     //list of targets we want to call functions on
     //calldata=encoded parameters for function and
     //description
-    console.log("!!!!!\n\n" + args + functionToCall + proposalDescription);
+    console.log("!!!!!\n\n" + "args: ", args + "\n" + "functionToCall: " + functionToCall + "\n" + "Prop. description: " + proposalDescription);
 
     const governor = await ethers.getContract(governorContractName);
     const executingContract = await ethers.getContract(contractNameWhereActionTakesPlace);
@@ -101,6 +101,7 @@ export async function queue(governorContractName: string) {
 
     const args = argsForFuncExecution;
     const executingContract = await ethers.getContract(contractNameWhereActionTakesPlace);
+    console.log("###\n\n encodeFunctionData")
     const encodedFunctionCall = executingContract.interface.encodeFunctionData(FUNC, args);
     //the queue function just looks for the hash of the proposal description
     const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION));

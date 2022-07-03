@@ -11,7 +11,8 @@ import {
     VOTING_PERIOD,
     MIN_DELAY,
     governorContractName,
-    governanceTokenContractName
+    governanceTokenContractName,
+    contractNameWhereActionTakesPlace
 } from "../helper-hardhat-config"
 import { moveBlocks } from "../utils/move-blocks"
 import { moveTime } from "../utils/move-time"
@@ -33,7 +34,7 @@ describe("Governor Flow", async () => {
     // }
 
     let timeLock: TimeLock
-    let box: Box
+    let executingContract: any;
     const voteWay = 1 // for
     const reason = "I lika do da cha cha"
     beforeEach(async () => {
@@ -41,18 +42,18 @@ describe("Governor Flow", async () => {
         governor = await ethers.getContract(governorContractName)
         timeLock = await ethers.getContract("TimeLock")
         governanceToken = await ethers.getContract(governanceTokenContractName)
-        box = await ethers.getContract("Box")
+        executingContract = await ethers.getContract(contractNameWhereActionTakesPlace)
     })
 
     it("can only be changed through governance", async () => {
-        await expect(box.store(55)).to.be.revertedWith("Ownable: caller is not the owner")
+        await expect(executingContract.store(55)).to.be.revertedWith("Ownable: caller is not the owner")
     })
 
     it("proposes, votes, waits, queues, and then executes", async () => {
         // propose
-        const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, [argsForFuncExecution])
+        const encodedFunctionCall = executingContract.interface.encodeFunctionData(FUNC, [argsForFuncExecution])
         const proposeTx = await governor.propose(
-            [box.address],
+            [executingContract.address],
             [0],
             [encodedFunctionCall],
             PROPOSAL_DESCRIPTION
@@ -75,7 +76,7 @@ describe("Governor Flow", async () => {
         // queue & execute
         // const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION))
         const descriptionHash = ethers.utils.id(PROPOSAL_DESCRIPTION)
-        const queueTx = await governor.queue([box.address], [0], [encodedFunctionCall], descriptionHash)
+        const queueTx = await governor.queue([executingContract.address], [0], [encodedFunctionCall], descriptionHash)
         await queueTx.wait(1)
         await moveTime(MIN_DELAY + 1)
         await moveBlocks(1)
@@ -85,8 +86,8 @@ describe("Governor Flow", async () => {
 
         console.log("Executing...")
         console.log
-        const exTx = await governor.execute([box.address], [0], [encodedFunctionCall], descriptionHash)
+        const exTx = await governor.execute([executingContract.address], [0], [encodedFunctionCall], descriptionHash)
         await exTx.wait(1)
-        console.log((await box.retrieve()).toString())
+        //console.log((await executingContract.retrieve()).toString())
     })
 })
