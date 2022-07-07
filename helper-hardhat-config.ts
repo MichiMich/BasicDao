@@ -1,5 +1,5 @@
 export const MIN_DELAY = 3600; //one hour
-export const VOTING_PERIOD = 5; //in blocks
+export const VOTING_PERIOD = 5; //in blocks, eth: 1 block between 12-15 seconds
 export const VOTING_DELAY = 1; //in blocks
 export const QUORUM_PERCANTAGE = 4;
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";

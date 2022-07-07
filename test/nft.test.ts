@@ -22,16 +22,19 @@ queuing and executing if failed, check if function is executed on contract after
 
 describe("nft test", async () => {
     let GovernanceTokenERC721: any;
-
+    let accounts: any;
     beforeEach(async () => {
-        //await deployments.fixture(["all"])
+        //get available accounts from hardhat
+        accounts = await hre.ethers.getSigners();
+        console.log("deploy contracts before test")
+        await deployments.fixture(); //see https://github.com/wighawag/hardhat-deploy#hardhat-deploy-in-a-nutshell
         GovernanceTokenERC721 = await ethers.getContract("GovernanceTokenERC721");
     })
 
     it("mint tokens,fetch tokenURI", async () => {
 
         for (let i = 0; i < 2; i++) {
-            await GovernanceTokenERC721.mint();
+            await GovernanceTokenERC721.connect(accounts[i]).mint();
             let tokenURI = await GovernanceTokenERC721.tokenURI(i);
             console.log("tokenURI of " + i + ": " + tokenURI + "\n");
         }

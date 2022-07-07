@@ -27,7 +27,8 @@ describe("Multiple vote test", async () => {
     let executingContract: any;
 
     beforeEach(async () => {
-        //await deployments.fixture(["all"])
+        console.log("deploy contracts before test")
+        await deployments.fixture(); //see https://github.com/wighawag/hardhat-deploy#hardhat-deploy-in-a-nutshell
         governor = await ethers.getContract(governorContractName)
         timeLock = await ethers.getContract("TimeLock")
         governanceToken = await ethers.getContract(governanceTokenContractName)
