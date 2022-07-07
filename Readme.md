@@ -140,7 +140,7 @@ yarn hardhat run scripts/runVoteCycle.ts --network localhost
 ```
 or:
 ```
-yarn hardhat test --network localhost --grep "mint tokens,fetch tokenURI"
+yarn hardhat test --network localhost --grep "mint tokens,propose, succeed vote, queue and execute"
 ```
 
 If working on testnet or mainnet:
