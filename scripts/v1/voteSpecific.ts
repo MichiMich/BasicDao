@@ -10,7 +10,7 @@ export async function voteSpecific(proposalIndex: number, voteWay: number, reaso
     console.log("read proposalId from file: ", propsalId);
     //choose how we are going to vote
     //0=against, 1=For, 2=Abstain
-    const governor = await ethers.getContract("GovernorContract");
+    const governor = await ethers.getContract("GovernorERC20");
     const voteTxResponse = await governor.connect(signer).castVoteWithReason(
         propsalId, voteWay, reason
     );

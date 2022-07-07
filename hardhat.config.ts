@@ -28,11 +28,11 @@ const config: HardhatUserConfig = {
       chainId: 31337,
       allowUnlimitedContractSize: true
     },
-    // rinkeby: {
-    //   url: RINKEBY_RPC_URL,
-    //   accounts: [PRIVATE_KEY],
-    //   chainId: 4,
-    // },
+    rinkeby: {
+      url: RINKEBY_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 4,
+    },
   },
   solidity: {
     version: "0.8.9",

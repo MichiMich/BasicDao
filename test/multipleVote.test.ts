@@ -60,7 +60,7 @@ describe("Multiple vote test", async () => {
 
         await voteSpecific(governorContractName, 0, 1, "I am for it", voter1);
         await voteSpecific(governorContractName, 0, 0, "I am against it", voter2);
-        await voteSpecific(governorContractName, 0, 1, "No", voter3);
+        await voteSpecific(governorContractName, 0, 1, "yes", voter3);
 
         //pass voting period
         //we want to get to the end of the voting period

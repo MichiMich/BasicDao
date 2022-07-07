@@ -27,10 +27,6 @@ contract GovernanceTokenERC721 is
         EIP712("MyToken", "1")
     {}
 
-    function _baseURI() internal pure override returns (string memory) {
-        return "ipfs://QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/";
-    }
-
     /*
     function safeMint(address to, uint256 tokenId) public onlyOwner {
         _safeMint(to, tokenId);
@@ -40,11 +36,23 @@ contract GovernanceTokenERC721 is
     //todo: add reentrance control
     function mint() public payable {
         require(tokensAlreadyMinted.current() < s_maxSupply, "Minted out");
+        require(balanceOf(msg.sender) == 0, "One mint per wallet allowed");
         _safeMint(msg.sender, tokensAlreadyMinted.current());
         tokensAlreadyMinted.increment();
     }
 
     // The following functions are overrides required by Solidity.
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override
+        returns (string memory)
+    {
+        require(_exists(tokenId), "ERC721: invalid token ID");
+        return (
+            "https://bafybeib4vosgm6izri2wkscdga6hjrnua7thdjzw3k73geapluasmcjrhq.ipfs.dweb.link/metadata.json"
+        );
+    }
 
     function _afterTokenTransfer(
         address from,
