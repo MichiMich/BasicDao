@@ -7,7 +7,6 @@ typechain
 #Hardhat files
 cache
 artifacts
-proposals.json
 .notes.md
 typechain-types
 gas-report.txt
