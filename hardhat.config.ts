@@ -6,6 +6,8 @@ import "dotenv/config"
 import "hardhat-deploy"
 import "@nomiclabs/hardhat-waffle"
 import { HardhatUserConfig } from "hardhat/config";
+
+import { node_url, accounts } from './utils/network';
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
@@ -29,8 +31,8 @@ const config: HardhatUserConfig = {
       allowUnlimitedContractSize: true
     },
     rinkeby: {
-      url: RINKEBY_RPC_URL,
-      accounts: [PRIVATE_KEY],
+      url: node_url('rinkeby'), //RINKEBY_RPC_URL,
+      accounts: accounts('rinkeby'),
       chainId: 4,
     },
   },
@@ -49,16 +51,25 @@ const config: HardhatUserConfig = {
   },
   namedAccounts: {
     deployer: {
-      default: 0,
+      default: 0, // here this will by default take the first account as deployer
+      1: 0, //this would be on mainnet and thake the first account as deployer
+      // @ts-ignore
+      4: "privatekey://" + process.env.PRIVATEKEY_RINKEBY, //rinkeby
     },
     voter1: {
-      default: 1,
+      default: 1, // here this will by default take the second account as voter
+      // @ts-ignore
+      4: "privatekey://" + process.env.PRIVATEKEY_RINKEBY_VOTER1, //rinkeby
     },
     voter2: {
-      default: 2,
+      default: 2, // here this will by default take the second account as voter
+      // @ts-ignore
+      4: "privatekey://" + process.env.PRIVATEKEY_RINKEBY_VOTER2, //rinkeby
     },
     voter3: {
-      default: 3,
+      default: 3, // here this will by default take the second account as voter
+      // @ts-ignore
+      4: "privatekey://" + process.env.PRIVATEKEY_RINKEBY_VOTER3, //rinkeby
     }
   }
 }

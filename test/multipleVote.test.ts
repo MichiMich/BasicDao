@@ -15,6 +15,7 @@ import {
     governorContractName,
     governanceTokenContractName
 } from "../helper-hardhat-config"
+const { deployments } = require('hardhat');
 /* 
 pretty basic test for one vote cycle, needs to be extended with more votes against,
 queuing and executing if failed, check if function is executed on contract after succeeded

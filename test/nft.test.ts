@@ -2,6 +2,7 @@ import { TimeLock } from "../typechain-types"
 
 // @ts-ignore
 import { ethers, network } from "hardhat"
+const { deployments } = require('hardhat');
 import { assert, expect } from "chai"
 import { mintAndDelegate, propose, voteSpecific, queue, execute } from "../scripts/daoFunctions";
 import { contractNameWhereActionTakesPlace, argsForFuncExecution, FUNC, PROPOSAL_DESCRIPTION, developmentChains, VOTING_DELAY, VOTING_PERIOD, proposalsFile, MIN_DELAY } from "../helper-hardhat-config";

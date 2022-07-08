@@ -1,6 +1,6 @@
-export const MIN_DELAY = 3600; //one hour
-export const VOTING_PERIOD = 5; //in blocks, eth: 1 block between 12-15 seconds
-export const VOTING_DELAY = 1; //in blocks
+export const MIN_DELAY = 60; //time after successfull proposal and queueing until wanted action is executed in seconds
+export const VOTING_PERIOD = 12; //time in blocks, where it is allowed to vote, eth: 1 block between 12-15 seconds
+export const VOTING_DELAY = 4; //delay in blocks after proposal until voting can start 
 export const QUORUM_PERCANTAGE = 4;
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
@@ -24,6 +24,29 @@ export const argsForFuncExecution = [77];
 export const FUNC = "store";
 export const PROPOSAL_DESCRIPTION = "Proposal #1: Store 77 in the Box!";
 */
+
+//verification specific
+export interface networkConfigItem {
+    ethUsdPriceFeed?: string
+    blockConfirmations?: number
+}
+export interface networkConfigInfo {
+    [key: string]: networkConfigItem
+}
+
+export const networkConfig: networkConfigInfo = {
+    localhost: {},
+    hardhat: {},
+    // Price Feed Address, values can be obtained at https://docs.chain.link/docs/reference-contracts
+    // Default one is ETH/USD contract on Kovan
+    kovan: {
+        blockConfirmations: 6,
+    },
+    rinkeby: {
+        blockConfirmations: 6,
+    }
+}
+
 
 
 /*configuration for wanted interactions of proposal and executed functions if succeeded (end)*/
